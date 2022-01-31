@@ -1,6 +1,6 @@
 {
   "name": "tuzex/ddd-messenger",
-  "description": "Implementation of DDD (Domain Driven Design) library based on Symfony messenger",
+  "description": "Implementation of Domain Driven Design (DDD) library based on Symfony messenger 4.3 and higher",
   "type": "symfony-bundle",
   "license": "MIT",
   "authors": [
