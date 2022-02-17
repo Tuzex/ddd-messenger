@@ -2,31 +2,54 @@
 
 declare(strict_types=1);
 
-namespace Tuzex\Ddd\Test\Messenger;
+namespace Tuzex\Ddd\Messenger\Test;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Tuzex\Ddd\Core\Domain\DomainEvent;
+use Tuzex\Ddd\Domain\DomainEvent;
 use Tuzex\Ddd\Messenger\MessengerDomainEventBus;
 
 final class MessengerDomainEventBusTest extends TestCase
 {
-    public function testItDispatchesDomainEventToMessageBus(): void
+    /**
+     * @dataProvider provideDomainEvents
+     */
+    public function testItDispatchesDomainEventToMessageBus(array $domainEvents): void
     {
-        $domainEvent = $this->createMock(DomainEvent::class);
-        $domainEventBus = new MessengerDomainEventBus($this->mockMessageBus($domainEvent));
+        $domainEventBus = new MessengerDomainEventBus(
+            $this->mockMessageBus(count($domainEvents))
+        );
 
-        $domainEventBus->publish($domainEvent);
+        $domainEventBus->publish(...$domainEvents);
     }
 
-    private function mockMessageBus(DomainEvent $domainEvent): MessageBusInterface
+    public function provideDomainEvents(): array
+    {
+        $domainEvent = $this->mockDomainEvent();
+
+        return [
+            'one' => [
+                'domainEvents' => [$domainEvent],
+            ],
+            'multiple' => [
+                'domainEvents' => [$domainEvent, $domainEvent],
+            ],
+        ];
+    }
+
+    private function mockDomainEvent(): DomainEvent
+    {
+        return $this->createMock(DomainEvent::class);
+    }
+
+    private function mockMessageBus(int $count): MessageBusInterface
     {
         $messageBus = $this->createMock(MessageBusInterface::class);
-        $messageBus->expects($this->once())
+        $messageBus->expects($this->exactly($count))
             ->method('dispatch')
             ->willReturn(
-                new Envelope($domainEvent)
+                new Envelope($this->mockDomainEvent())
             );
 
         return $messageBus;

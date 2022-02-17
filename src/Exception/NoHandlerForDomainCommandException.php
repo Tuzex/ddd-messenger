@@ -6,7 +6,7 @@ namespace Tuzex\Ddd\Messenger\Exception;
 
 use LogicException;
 use Throwable;
-use Tuzex\Ddd\Core\Domain\DomainCommand;
+use Tuzex\Ddd\Domain\DomainCommand;
 
 final class NoHandlerForDomainCommandException extends LogicException
 {

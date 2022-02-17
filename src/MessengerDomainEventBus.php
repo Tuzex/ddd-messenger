@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tuzex\Ddd\Messenger;
 
 use Symfony\Component\Messenger\MessageBusInterface;
-use Tuzex\Ddd\Core\Application\DomainEventBus;
-use Tuzex\Ddd\Core\Domain\DomainEvent;
+use Tuzex\Ddd\Application\DomainEventBus;
+use Tuzex\Ddd\Domain\DomainEvent;
 
 final class MessengerDomainEventBus implements DomainEventBus
 {
@@ -14,8 +14,10 @@ final class MessengerDomainEventBus implements DomainEventBus
         private MessageBusInterface $messageBus
     ) {}
 
-    public function publish(DomainEvent $domainEvent): void
+    public function publish(DomainEvent ...$domainEvents): void
     {
-        $this->messageBus->dispatch($domainEvent);
+        foreach ($domainEvents as $domainEvent) {
+            $this->messageBus->dispatch($domainEvent);
+        }
     }
 }
