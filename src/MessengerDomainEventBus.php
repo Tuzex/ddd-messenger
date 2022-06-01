@@ -11,7 +11,7 @@ use Tuzex\Ddd\Domain\DomainEvent;
 final class MessengerDomainEventBus implements DomainEventBus
 {
     public function __construct(
-        private MessageBusInterface $messageBus
+        private readonly MessageBusInterface $messageBus
     ) {}
 
     public function publish(DomainEvent ...$domainEvents): void
